@@ -18,29 +18,29 @@ function displayLocation(position) {
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
     let km = computeDistance(position.coords, ourCoords);
-    let div = document.getElementById('location');
+    let location = document.getElementById('location');
     let distance = document.getElementById('distance');
 
-    div.innerHTML = `You are at latitude: ${latitude}, longitude: ${longitude}`;
+    location.innerHTML = `You are at latitude: ${latitude}, longitude: ${longitude}`;
     distance.innerHTML = `You are ${km} km from the WickedlySmart HQ`;
 }
 
 function displayError(error) {
     const errorTypes = {
         0: 'Unknown error',
-        1: 'Permission denied by user',
+        1: 'Permission denied',
         2: 'Position is not available',
-        3: 'Request timed out'
+        3: 'Request timeout'
     };
 
     let errorMessage = errorTypes[error.code];
-    let div = document.getElementById('location');
+    let location = document.getElementById('location');
 
     if (error.code === 0 || error.code === 2) {
         errorMessage += error.message;
     }
 
-    div.innerHTML = errorMessage;
+    location.innerHTML = errorMessage;
 }
 
 function computeDistance(startCoords, destCoords) {
@@ -49,13 +49,14 @@ function computeDistance(startCoords, destCoords) {
     let startLongRads = degreesToRadians(startCoords.longitude);
     let destLatRads = degreesToRadians(destCoords.latitude);
     let destLongRads = degreesToRadians(destCoords.longitude);
-    let distance = Math.acos(
+
+    let distance = Math.round(Math.acos(
         Math.sin(startLatRads) *
         Math.sin(destLatRads) +
         Math.cos(startLatRads) *
         Math.cos(destLatRads) *
         Math.cos(startLongRads - destLongRads)
-    ) * Radius;
+    ) * Radius);
 
     return distance;
 }
