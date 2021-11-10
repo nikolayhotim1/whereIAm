@@ -1,4 +1,6 @@
 'use strict';
+let map;
+
 let ourCoords = {
     latitude: 47.624851,
     longitude: -122.52099
@@ -23,6 +25,8 @@ function displayLocation(position) {
 
     location.innerHTML = `You are at latitude: ${latitude}, longitude: ${longitude}`;
     distance.innerHTML = `You are ${km} km from the WickedlySmart HQ`;
+
+    showMap(position.coords);
 }
 
 function displayError(error) {
@@ -65,4 +69,45 @@ function degreesToRadians(degrees) {
     let radians = (degrees * Math.PI) / 180;
 
     return radians;
+}
+
+function showMap(coords) {
+    let googleLatAndLong = new google.maps.LatLng(coords.latitude, coords.longitude);
+    let mapDiv = document.getElementById('map');
+
+    let mapOptions = {
+        zoom: 10,
+        center: googleLatAndLong,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(mapDiv, mapOptions);
+
+    // add the user marker
+    let title = 'Your Location';
+    let content = `You are here: ${coords.latitude}, ${coords.longitude}`;
+
+    addMarker(map, googleLatAndLong, title, content);
+}
+
+function addMarker(map, latlong, title, content) {
+    let markerOptions = {
+        position: latlong,
+        map: map,
+        title: title,
+        clickable: true
+    };
+
+    let marker = new google.maps.Marker(markerOptions);
+
+    let infoWindowOptions = {
+        content: content,
+        position: latlong
+    };
+
+    let infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+
+    google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.open(map);
+    });
 }
