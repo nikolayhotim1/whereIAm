@@ -23,7 +23,7 @@ function displayLocation(position) {
     let location = document.getElementById('location');
     let distance = document.getElementById('distance');
 
-    location.innerHTML = `You are at latitude: ${latitude}, longitude: ${longitude}`;
+    location.innerHTML = `You are at latitude: ${latitude}, longitude: ${longitude} with ${position.coords.accuracy} meters accuracy`;
     distance.innerHTML = `You are ${km} km from the WickedlySmart HQ`;
 
     showMap(position.coords);
